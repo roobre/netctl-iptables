@@ -1,0 +1,7 @@
+Ipt_filter='default'
+Ipt_mangle='default'
+
+ExecDownPre='/usr/bin/iptables-restore < /etc/iptables/empty.rules'
+ExecUpPost="/usr/bin/iptables-restore < /etc/iptables/empty.rules \
+            && /usr/bin/iptables-restore < /etc/iptables/\$Ipt_filter.filter.rules \
+            && /usr/bin/iptables-restore < /etc/iptables/\$Ipt_mangle.mangle.rules"

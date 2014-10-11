@@ -1,0 +1,31 @@
+*filter
+
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# Interfaces
+# ==========
+
+# Loopback traffic is useful.
+-A INPUT -i lo -j ACCEPT
+# VPN traffic is also nice.
+-A INPUT -i tun0 -j ACCEPT
+
+# Rules
+# =====
+
+# INPUT
+
+# Allow ping
+-A INPUT -p icmp -j ACCEPT
+# Allow UDP traffic.
+-A INPUT -p udp -j ACCEPT
+# You know what this means.
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+# Make tcp ports appear as closed
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset
+# Reject other protocols with host unreachable.
+-A INPUT -j REJECT --reject-with icmp-host-unreachable
+
+COMMIT
